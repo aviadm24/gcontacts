@@ -26,7 +26,7 @@ SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://danielavida.herokuapp.com/']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'danielavida.herokuapp.com']
 
 
 # Application definition
