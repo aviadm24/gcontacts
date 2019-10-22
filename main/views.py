@@ -8,6 +8,8 @@ import googleapiclient.discovery
 from django.conf import settings
 from .models import User_tokens
 from django.contrib.sessions.backends.db import SessionStore
+# about ssl in django
+# https://stackoverflow.com/questions/7610394/how-to-setup-ssl-on-a-local-django-server-to-test-a-facebook-app
 
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
@@ -79,6 +81,7 @@ def login(request):
     s.create()
     s_key = s.session_key
     request.session['s_key'] = s_key
+    print('session2: ', request.session['crmuserid'])
     # print('----------------------')
     # print(request.session[AUTH_STATE_KEY])
     # print('----------------------')
@@ -115,7 +118,15 @@ def google_auth_redirect(request):
 
     user_info = get_user_info(s_key)
     print('user info: ', user_info['given_name'])
-    user = User_tokens()
+    print('session: ', request.session.items())
+    # crmuserid = request.session["crmuserid"]
+    # print('crmuserid info: ', crmuserid)
+    crmuserid = request.COOKIES.get('crmuserid')
+    print('crmuserid cookie: ', crmuserid)
+    with open('crmuserid.txt', 'r') as f:
+        crmuserid = f.read()
+        print('crmuserid in file: ', crmuserid)
+    user = User_tokens.objects.get(crmuserid=crmuserid)
     user.name = user_info['given_name']
     user.refresh_token = oauth2_tokens['refresh_token']
     user.save()
@@ -123,55 +134,69 @@ def google_auth_redirect(request):
     return redirect(BASE_URI, code=302)
 
 
-def build_people_api_v1(request):
+# def build_people_api_v1(request):
+#
+#     credentials = build_credentials(request)
+#     return googleapiclient.discovery.build('people', 'v1', credentials=credentials)
 
-    credentials = build_credentials(request)
-    return googleapiclient.discovery.build('people', 'v1', credentials=credentials)
 
-
-def build_people_from_refresh(name):
-    user = User_tokens.objects.get(name=name)
+def build_people_from_refresh(crmuserid):
+    user = User_tokens.objects.get(crmuserid=crmuserid)
     refresh_token = user.refresh_token
     credentials = build_credentials_from_refresh(refresh_token)
     return googleapiclient.discovery.build('people', 'v1', credentials=credentials)
 
 
-def create_new_contact(request):
-    people_api = build_people_api_v1(request)
-    # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
-    # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
-    contact1 = people_api.people().createContact(
-        body={"names": [{"givenName": "John", "familyName": "Doe"}],
-              "emailAddresses": [{"value": "jenny.doe@example.com"}],
-              "phoneNumbers": [{"value": "0547573120"}]
-              })
-    print('==============')
-    print(contact1)
-    # "phoneNumbers": [{"phoneNumber": "0547573120"}]
-    contact1.execute()
-    return {"names": [{"givenName": "John", "familyName": "Doe"}]}
+# def create_new_contact(request):
+#     people_api = build_people_api_v1(request)
+#     # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
+#     # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
+#     contact1 = people_api.people().createContact(
+#         body={"names": [{"givenName": "John", "familyName": "Doe"}],
+#               "emailAddresses": [{"value": "jenny.doe@example.com"}],
+#               "phoneNumbers": [{"value": "0547573120"}]
+#               })
+#     print('==============')
+#     print(contact1)
+#     # "phoneNumbers": [{"phoneNumber": "0547573120"}]
+#     contact1.execute()
+#     return {"names": [{"givenName": "John", "familyName": "Doe"}]}
     # people_api.people().createContact(contactToCreate).execute()
 
 
 
 def google_contacts_app(request):
-    return render(request, 'home/gcontacts.html')
+    crmuserid = request.GET.get('crmuserid')
+    response = render(request, 'home/gcontacts.html')
+    if crmuserid is not None:
+        # user = User_tokens()
+        user, created = User_tokens.objects.get_or_create(crmuserid=crmuserid)
+        print('created: ', created)
+        # user.crmuserid = crmuserid
+        user.save()
+        with open('crmuserid.txt', 'w') as f:
+            f.write(crmuserid)
+        # request.session['crmuserid'] = crmuserid
+        # response.set_cookie(key='crmuserid', value=crmuserid)
+        # crmuserid = request.COOKIES.get('crmuserid')
+        print('check1: ', crmuserid)
+    return response
 
 
 @csrf_exempt
 def add_contact(request):
     if request.method == 'POST':
-        user_name = request.POST.get('user_name')
+        crmuserid = request.POST.get('crmuserid')
         contact_name = request.POST.get('contact_name')
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         # message = request.POST.get('message')
         print('create contact function name: ', contact_name)
-        people_api = build_people_from_refresh(user_name)
+        people_api = build_people_from_refresh(crmuserid)
         # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
         # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
         contact = people_api.people().createContact(
-            body={"names": [{"givenName": contact_name, "familyName": contact_name}],
+            body={"names": [{"givenName": contact_name, "familyName": ""}],
                   "emailAddresses": [{"value": email}],
                   "phoneNumbers": [{"value": phone}]
                   })

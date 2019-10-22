@@ -21,6 +21,9 @@
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="privacy_policy">Privacy policy</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="admin">Admin</a>
+            </li>
           </ul>
           <span class="navbar-text mr-2">
             Currently logged in as
@@ -43,8 +46,8 @@
             <form name="sentMessage" id="addContactForm" novalidate>
               <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
-                  <label>User Name</label>
-                  <input class="form-control" id="user_name" type="text" placeholder="Name" required data-validation-required-message="Please enter your name.">
+                  <label>crmuserid</label>
+                  <input class="form-control" id="crmuserid" type="text" placeholder="Name" required data-validation-required-message="Please enter your name.">
                   <p class="help-block text-danger"></p>
                 </div>
               </div>
@@ -97,7 +100,7 @@
 
     <!-- Plugin JavaScript -->
     <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'js/jqBootstrapValidation.js' %}"></script>
+    <!--<script src="{% static 'js/jqBootstrapValidation.js' %}"></script>-->
     <script src="{% static 'js/add_contact.js' %}"></script>
     <script>
         $('.custom-file-input').on('change', function() {

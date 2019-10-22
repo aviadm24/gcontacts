@@ -25,13 +25,14 @@ SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'https://danielavida.herokuapp.com/']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'main',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

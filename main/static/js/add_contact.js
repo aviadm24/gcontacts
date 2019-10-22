@@ -2,23 +2,23 @@
   $("#addContactForm").submit(function(event){
       event.preventDefault(); // prevent default submit behaviour
       // get values from FORM
-      var user_name = $("input#user_name").val();
+      var crmuserid = $("input#crmuserid").val();
       var contact_name = $("input#contact_name").val();
       var email = $("input#email").val();
       var phone = $("input#phone").val();
-      var user_name = user_name; // For Success/Failure Message
+//      var user_name = user_name; // For Success/Failure Message
       // Check for white space in name for Success/Fail message
-      if (user_name.indexOf(' ') >= 0) {
-        user_name = user_name.split(' ').slice(0, -1).join(' ');
-      }
+//      if (user_name.indexOf(' ') >= 0) {
+//        user_name = user_name.split(' ').slice(0, -1).join(' ');
+//      }
       $this = $("#sendMessageButton");
       $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
-//      console.log('name = '+user_name)
+      console.log('crmuserid = '+crmuserid)
       $.ajax({
         url: "/add_contact",
         type: "POST",
         data: {
-          user_name: user_name,
+          crmuserid: crmuserid,
           contact_name: contact_name,
           phone: phone,
           email: email
