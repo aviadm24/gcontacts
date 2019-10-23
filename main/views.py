@@ -15,7 +15,7 @@ ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
 
 # AUTHORIZATION_SCOPE = 'openid email profile'
-AUTHORIZATION_SCOPE ='openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
+AUTHORIZATION_SCOPE = settings.AUTHORIZATION_SCOPE
 
 AUTH_REDIRECT_URI = settings.FN_AUTH_REDIRECT_URI
 BASE_URI = settings.FN_BASE_URI
@@ -76,12 +76,13 @@ def login(request):
 
     uri, state = session.create_authorization_url(AUTHORIZATION_URL)
     request.session[AUTH_STATE_KEY] = state
-    s = SessionStore()
-    s['auth_state'] = state
-    s.create()
-    s_key = s.session_key
-    request.session['s_key'] = s_key
-    print('session2: ', request.session['crmuserid'])
+    # s = SessionStore()
+    # s['auth_state'] = state
+    # s.create()
+    # s_key = s.session_key
+    # request.session['s_key'] = s_key
+    # print('session2: ', request.session['crmuserid'])
+
     # print('----------------------')
     # print(request.session[AUTH_STATE_KEY])
     # print('----------------------')
@@ -121,8 +122,9 @@ def google_auth_redirect(request):
     print('session: ', request.session.items())
     # crmuserid = request.session["crmuserid"]
     # print('crmuserid info: ', crmuserid)
-    crmuserid = request.COOKIES.get('crmuserid')
-    print('crmuserid cookie: ', crmuserid)
+
+    # crmuserid = request.COOKIES.get('crmuserid')
+    # print('crmuserid cookie: ', crmuserid)
     with open('crmuserid.txt', 'r') as f:
         crmuserid = f.read()
         print('crmuserid in file: ', crmuserid)
@@ -171,12 +173,13 @@ def google_contacts_app(request):
     if crmuserid is not None:
         # user = User_tokens()
         user, created = User_tokens.objects.get_or_create(crmuserid=crmuserid)
-        print('created: ', created)
         # user.crmuserid = crmuserid
         user.save()
+        print('created: ', created)
+        
         with open('crmuserid.txt', 'w') as f:
             f.write(crmuserid)
-        # request.session['crmuserid'] = crmuserid
+        request.session['crmuserid'] = crmuserid
         # response.set_cookie(key='crmuserid', value=crmuserid)
         # crmuserid = request.COOKIES.get('crmuserid')
         print('check1: ', crmuserid)

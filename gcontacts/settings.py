@@ -150,8 +150,17 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'aviadm32@gmail.com'
 EMAIL_HOST_PASSWORD = 'aviadpython'
 
-
-FN_AUTH_REDIRECT_URI = "http://localhost:8000/google/auth"
-FN_BASE_URI = "http://localhost:8000"
-FN_CLIENT_ID = "37866652038-qh3b1ni3e1b5ad8n3beds83s7e1jt1fj.apps.googleusercontent.com"
-FN_CLIENT_SECRET = "kds92jr8z4Esb92VImChdTih"
+ipaddress = socket.gethostbyname(socket.gethostname())
+print('ip_address:', ipaddress)
+if not ipaddress.startswith('172'):
+    FN_AUTH_REDIRECT_URI = "http://localhost:8000/google/auth"
+    FN_BASE_URI = "http://localhost:8000"
+    FN_CLIENT_ID = "37866652038-qh3b1ni3e1b5ad8n3beds83s7e1jt1fj.apps.googleusercontent.com"
+    FN_CLIENT_SECRET = "kds92jr8z4Esb92VImChdTih"
+    AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
+else:
+    FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
+    FN_BASE_URI = "https://www.pythoninhebrew.com"
+    FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
+    FN_CLIENT_SECRET = "8wKO2wWzfQ-j_wq0csr3_BdB"
+    AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
