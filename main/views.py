@@ -176,7 +176,7 @@ def google_contacts_app(request):
         # user.crmuserid = crmuserid
         user.save()
         print('created: ', created)
-        
+
         with open('crmuserid.txt', 'w') as f:
             f.write(crmuserid)
         request.session['crmuserid'] = crmuserid

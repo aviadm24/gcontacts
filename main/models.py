@@ -4,7 +4,7 @@ from django.db import models
 class User_tokens(models.Model):
     name = models.CharField(max_length=100)
     crmuserid = models.CharField(max_length=20)  #, unique=True
-    refresh_token = models.CharField(max_length=100)
+    refresh_token = models.CharField(max_length=1000)
     phone = models.CharField(max_length=20)
     email = models.EmailField()
     state_key = models.CharField(max_length=100)
