@@ -134,16 +134,16 @@ def google_auth_redirect(request):
         user = User_tokens.objects.get(crmuserid=crmuserid)
         user.name = user_info['given_name']
         user.refresh_token = oauth2_tokens['refresh_token']
-        action_id = user.state_key
+        # action_id = user.state_key
         user.save()
-        send_action_to_crm(action_id, 'true')
+        # send_action_to_crm(action_id, 'true')
     except Exception as e:
         print(e)
-        with open('crmuserid.txt', 'r') as f:
-            crmuserid = f.read()
-        user = User_tokens.objects.get(crmuserid=crmuserid)
-        action_id = user.state_key
-        send_action_to_crm(action_id, 'false', e)
+        # with open('crmuserid.txt', 'r') as f:
+        #     crmuserid = f.read()
+        # user = User_tokens.objects.get(crmuserid=crmuserid)
+        # action_id = user.state_key
+        # send_action_to_crm(action_id, 'false', e)
     return redirect(BASE_URI, code=302)
 
 
@@ -192,12 +192,12 @@ def build_people_from_refresh(crmuserid):
 
 def google_contacts_app(request):
     crmuserid = request.GET.get('crmuserid')
-    action_id = request.GET.get('action_id')
+    # action_id = request.GET.get('action_id')
     response = render(request, 'home/gcontacts.html')
     if crmuserid is not None:
         # user = User_tokens()
         user, created = User_tokens.objects.get_or_create(crmuserid=crmuserid)
-        user.state_key = action_id
+        # user.state_key = action_id
         # user.crmuserid = crmuserid
         user.save()
         print('created: ', created)
