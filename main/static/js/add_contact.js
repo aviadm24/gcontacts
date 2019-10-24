@@ -6,6 +6,7 @@
       var contact_name = $("input#contact_name").val();
       var email = $("input#email").val();
       var phone = $("input#phone").val();
+      var action_id = $("input#action_id").val();
 //      var user_name = user_name; // For Success/Failure Message
       // Check for white space in name for Success/Fail message
 //      if (user_name.indexOf(' ') >= 0) {
@@ -13,15 +14,17 @@
 //      }
       $this = $("#sendMessageButton");
       $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
-      console.log('crmuserid = '+crmuserid)
+      console.log('action_id = '+action_id)
       $.ajax({
         url: "/add_contact",
+//        url: "/action_check",
         type: "POST",
         data: {
           crmuserid: crmuserid,
           contact_name: contact_name,
           phone: phone,
-          email: email
+          email: email,
+          action_id: action_id
         },
         cache: false,
         success: function() {
@@ -43,7 +46,7 @@
           $('#success').html("<div class='alert alert-danger'>");
           $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
             .append("</button>");
-          $('#success > .alert-danger').append($("<strong>").text("Sorry " + firstName + ", it seems that my mail server is not responding. Please try again later!"));
+          $('#success > .alert-danger').append($("<strong>").text("Sorry " + contact_name + ", it seems that my mail server is not responding. Please try again later!"));
           $('#success > .alert-danger').append('</div>');
           //clear all fields
           $('#contactForm').trigger("reset");

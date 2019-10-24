@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^add_contact$', views.add_contact, name='add_contact'),
     url(r'^privacy_policy$', views.privacy_policy, name='privacy_policy'),
     url(r'^send_mail$', views.send_mail, name='send_mail'),
+    url(r'^action_check$', views.action_check, name='action_check'),
 
 ]

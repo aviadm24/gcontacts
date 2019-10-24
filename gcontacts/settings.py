@@ -160,9 +160,11 @@ if not ipaddress.startswith('172'):
     FN_CLIENT_ID = "37866652038-qh3b1ni3e1b5ad8n3beds83s7e1jt1fj.apps.googleusercontent.com"
     FN_CLIENT_SECRET = "kds92jr8z4Esb92VImChdTih"
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
+    ACTION_URL = "http://localhost:8000/action_check"
 else:
     FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
     FN_BASE_URI = "https://www.pythoninhebrew.com"
     FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
     FN_CLIENT_SECRET = "8wKO2wWzfQ-j_wq0csr3_BdB"
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
+    ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
