@@ -144,8 +144,8 @@ def google_auth_redirect(request):
         # user = User_tokens.objects.get(crmuserid=crmuserid)
         # action_id = user.state_key
         # send_action_to_crm(action_id, 'false', e)
-    return redirect(BASE_URI, code=302)
-
+    # return redirect(BASE_URI, code=302)
+    return redirect('privacy_policy')
 
 def send_action_to_crm(action_id, action_success, err=''):
     print('action check2: ', action_id)
@@ -208,18 +208,34 @@ def google_contacts_app(request):
         # response.set_cookie(key='crmuserid', value=crmuserid)
         # crmuserid = request.COOKIES.get('crmuserid')
         print('check1: ', crmuserid)
-    return response
+    return redirect('login')
 
 
 @csrf_exempt
 def add_contact(request):
     if request.method == 'POST':
-        action_id = request.POST.get('action_id')
-        print('action check: ', action_id)
-        crmuserid = request.POST.get('crmuserid')
-        contact_name = request.POST.get('contact_name')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
+        print('body: ', request.body)
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            action_id = data['action_id']
+            print('try action check: ', action_id)
+            crmuserid = data['crmuserid']
+            contact_name = data['contact_name']
+            phone = data['phone']
+            email = data['email']
+        except:
+            action_id = request.POST.get('action_id')
+            print('except action check: ', action_id)
+            crmuserid = request.POST.get('crmuserid')
+            contact_name = request.POST.get('contact_name')
+            phone = request.POST.get('phone')
+            email = request.POST.get('email')
+            # {'crmuserid':crmuserid,
+            #  'action_id':action_id,
+            #  'contact_name':contact_name,
+            #  'phone':phone,
+            #  'email':email,
+            # }
         try:
             print('create contact function name: ', contact_name)
             people_api = build_people_from_refresh(crmuserid)

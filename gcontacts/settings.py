@@ -153,7 +153,7 @@ EMAIL_HOST_USER = 'aviadm32@gmail.com'
 EMAIL_HOST_PASSWORD = 'aviadpython'
 
 ipaddress = socket.gethostbyname(socket.gethostname())
-print('ip_address:', ipaddress)
+# print('ip_address:', ipaddress)
 if not ipaddress.startswith('172'):
     FN_AUTH_REDIRECT_URI = "http://localhost:8000/google/auth"
     FN_BASE_URI = "http://localhost:8000"
