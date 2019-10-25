@@ -167,5 +167,5 @@ else:
     FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
     FN_CLIENT_SECRET = "8wKO2wWzfQ-j_wq0csr3_BdB"
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
-    ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
-    # ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
+    # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
+    ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
