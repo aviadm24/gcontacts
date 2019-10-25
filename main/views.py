@@ -255,6 +255,8 @@ def add_contact(request):
             send_action_to_crm(action_id, 'false', e)
 
         return render(request, 'home/gcontacts.html', {'success': contact_name})
+    else:
+        return render(request, 'home/gcontacts.html')
 
 
 def privacy_policy(request):
