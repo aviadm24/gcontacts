@@ -156,7 +156,7 @@ def send_action_to_crm(action_id, action_success, err=''):
     payload = {'json_payload': data_json}
     url = settings.ACTION_URL
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
-    r = requests.post(url, data=data_json)
+    r = requests.post(url, json=data_json)
 
 
 # def build_people_api_v1(request):
