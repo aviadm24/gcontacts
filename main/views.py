@@ -147,6 +147,7 @@ def google_auth_redirect(request):
     # return redirect(BASE_URI, code=302)
     return redirect('privacy_policy')
 
+
 def send_action_to_crm(action_id, action_success, err=''):
     print('action check2: ', action_id)
     data = {'action_id': action_id,
@@ -156,7 +157,7 @@ def send_action_to_crm(action_id, action_success, err=''):
     payload = {'json_payload': data_json}
     url = settings.ACTION_URL
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
-    r = requests.post(url, json=data_json)
+    r = requests.post(url, data=data_json)
 
 
 # def build_people_api_v1(request):
@@ -249,10 +250,10 @@ def add_contact(request):
             print('==============')
             # print(contact)
             contact.execute()
-            send_action_to_crm(action_id, 'true')
+            send_action_to_crm(action_id, True)
             # print('action check: ', action_id)
         except Exception as e:
-            send_action_to_crm(action_id, 'false', e)
+            send_action_to_crm(action_id, False, e)
 
         return render(request, 'home/gcontacts.html', {'success': contact_name})
     else:
