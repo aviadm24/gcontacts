@@ -171,4 +171,5 @@ else:
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
     # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
     ACTION_URL = 'https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
-    SAFE_IP = ['192.116.50.2', '213.151.44.75', '192.168.1.15', '5.28.139.232']
+    SAFE_IP = ['192.116.50.2', '192.168.1.15', '5.28.139.232']
+    # , '213.151.44.75'
