@@ -148,16 +148,29 @@ def google_auth_redirect(request):
     return redirect('privacy_policy')
 
 
-def send_action_to_crm(action_id, action_success, err=''):
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    # HTTP_X_FORWARDED_FOR
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def send_action_to_crm(action_id, action_success, err=None):
     print('action check2: ', action_id)
     data = {'action_id': action_id,
             'action_success': action_success,
             'err': err}
     data_json = json.dumps(data)
+    print('data json: ', data_json)
     payload = {'json_payload': data_json}
     url = settings.ACTION_URL
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
-    r = requests.post(url, data=data_json)
+    # https: // hookbin.com
+    r = requests.post(url, json=data)
+    # r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
 
 
 # def build_people_api_v1(request):
@@ -209,13 +222,18 @@ def google_contacts_app(request):
         # response.set_cookie(key='crmuserid', value=crmuserid)
         # crmuserid = request.COOKIES.get('crmuserid')
         print('check1: ', crmuserid)
-    return redirect('login')
+    # return redirect('login')
+    return render(request, template_name='home/gcontacts.html')
 
 
 @csrf_exempt
 def add_contact(request):
     if request.method == 'POST':
-        print('body: ', request.body)
+        client_ip = get_client_ip(request)
+        print('client_ip: ', client_ip)
+        if client_ip == settings.SAFE_IP:
+            print("safe ip")
+
         try:
             data = json.loads(request.body.decode("utf-8"))
             action_id = data['action_id']
@@ -253,7 +271,7 @@ def add_contact(request):
             send_action_to_crm(action_id, True)
             # print('action check: ', action_id)
         except Exception as e:
-            send_action_to_crm(action_id, False, e)
+            send_action_to_crm(action_id, False, str(e))
 
         return render(request, 'home/gcontacts.html', {'success': contact_name})
     else:
@@ -285,5 +303,6 @@ def action_check(request):
         action = json.loads(request.body.decode("utf-8"))
         # action_success = request.POST.get('action_success')
         err = request.POST.get('err')
-        print('action: {} - success: {}'.format(action['action_id'], action['action_success']))
+        # print('action: {} - success: {}'.format(action['action_id'], action['action_success']))
+        print('action: ', action)
     return render(request, 'home/privacy_policy.html')

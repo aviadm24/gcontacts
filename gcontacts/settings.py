@@ -26,7 +26,7 @@ SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'danielavida.herokuapp.com', 'www.pythoninhebrew.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'danielavida.herokuapp.com', 'www.pythoninhebrew.com', 'h.lavida.co.il']
 
 
 # Application definition
@@ -161,6 +161,8 @@ if not ipaddress.startswith('172'):
     FN_CLIENT_SECRET = "kds92jr8z4Esb92VImChdTih"
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
     ACTION_URL = "http://localhost:8000/action_check"
+    # ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
+    SAFE_IP = '192.168.1.15'
 else:
     FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
     FN_BASE_URI = "https://www.pythoninhebrew.com"
@@ -169,3 +171,4 @@ else:
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
     # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
     ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
+    SAFE_IP = '192.116.50.2'
