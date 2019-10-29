@@ -154,7 +154,7 @@ def get_client_ip(request):
     print('x_forwarded_for: ', x_forwarded_for)
     data = {'REMOTE_ADDR': ip,
             'x_forwarded_for': x_forwarded_for}
-    # r = requests.post("https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8", json=data)
+    # r = requests.post("https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8", json=data)
     r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
     return x_forwarded_for
 
@@ -240,8 +240,8 @@ def add_contact(request):
     if request.method == 'POST':
         client_ip = get_client_ip(request)
         print('client_ip: ', client_ip)
-        if client_ip in settings.SAFE_IP:
-            print("safe ip: ". client_ip)
+        if client_ip == None or client_ip in settings.SAFE_IP:
+            print("safe ip: ", client_ip)
 
             try:
                 data = json.loads(request.body.decode("utf-8"))
@@ -262,6 +262,11 @@ def add_contact(request):
             try:
                 print('create contact function name: ', contact_name)
                 people_api = build_people_from_refresh(crmuserid)
+
+                # aContact = service.people().get(
+                #     resourceName='people/c.....',
+                #     personFields='nicknames'
+                # ).execute()
 
                 # contact = people_api.people().updateContact(
                 #     resourceName='people/me',

@@ -162,7 +162,7 @@ if not ipaddress.startswith('172'):
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
     ACTION_URL = "http://localhost:8000/action_check"
     # ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
-    SAFE_IP = '192.168.1.15'
+    SAFE_IP = '127.0.0.1'
 else:
     FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
     FN_BASE_URI = "https://www.pythoninhebrew.com"
@@ -170,5 +170,5 @@ else:
     FN_CLIENT_SECRET = "8wKO2wWzfQ-j_wq0csr3_BdB"
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
     # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
-    ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
+    ACTION_URL = 'https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
     SAFE_IP = ['192.116.50.2', '213.151.44.75', '192.168.1.15', '5.28.139.232']
