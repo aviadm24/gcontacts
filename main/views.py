@@ -234,50 +234,53 @@ def add_contact(request):
         if client_ip == settings.SAFE_IP:
             print("safe ip: ". client_ip)
 
-        try:
-            data = json.loads(request.body.decode("utf-8"))
-            action_id = data['action_id']
-            print('try action check: ', action_id)
-            crmuserid = data['crmuserid']
-            contact_name = data['contact_name']
-            phone = data['phone']
-            email = data['email']
-        except:
-            action_id = request.POST.get('action_id')
-            print('except action check: ', action_id)
-            crmuserid = request.POST.get('crmuserid')
-            contact_name = request.POST.get('contact_name')
-            phone = request.POST.get('phone')
-            email = request.POST.get('email')
+            try:
+                data = json.loads(request.body.decode("utf-8"))
+                action_id = data['action_id']
+                print('try action check: ', action_id)
+                crmuserid = data['crmuserid']
+                contact_name = data['contact_name']
+                phone = data['phone']
+                email = data['email']
+            except:
+                action_id = request.POST.get('action_id')
+                print('except action check: ', action_id)
+                crmuserid = request.POST.get('crmuserid')
+                contact_name = request.POST.get('contact_name')
+                phone = request.POST.get('phone')
+                email = request.POST.get('email')
 
-        # try:
-        print('create contact function name: ', contact_name)
-        people_api = build_people_from_refresh(crmuserid)
-        
-        # contact = people_api.people().updateContact(
-        #     resourceName='people/me',
-        #     body={"names": [{"givenName": contact_name, "familyName": ""}],
-        #           "emailAddresses": [{"value": email}],
-        #           "phoneNumbers": [{"value": phone}]
-        #           },
-        #     updatePersonFields="names,emailAddresses,phoneNumbers"
-        # ).execute()
-        # print('=====update======')
-        # print(contact)
-        # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
-        # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
-        contact = people_api.people().createContact(
-            body={"names": [{"givenName": contact_name, "familyName": ""}],
-                  "emailAddresses": [{"value": email}],
-                  "phoneNumbers": [{"value": phone}]
-                  })
-        print('==============')
-        # print(contact)
-        contact.execute()
-        send_action_to_crm(action_id, True)
-        # print('action check: ', action_id)
-        # except Exception as e:
-        #     send_action_to_crm(action_id, False, str(e))
+            try:
+                print('create contact function name: ', contact_name)
+                people_api = build_people_from_refresh(crmuserid)
+
+                # contact = people_api.people().updateContact(
+                #     resourceName='people/me',
+                #     body={"names": [{"givenName": contact_name, "familyName": ""}],
+                #           "emailAddresses": [{"value": email}],
+                #           "phoneNumbers": [{"value": phone}]
+                #           },
+                #     updatePersonFields="names,emailAddresses,phoneNumbers"
+                # ).execute()
+                # print('=====update======')
+                # print(contact)
+                # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
+                # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
+                contact = people_api.people().createContact(
+                    body={"names": [{"givenName": contact_name, "familyName": ""}],
+                          "emailAddresses": [{"value": email}],
+                          "phoneNumbers": [{"value": phone}]
+                          })
+                print('==============')
+                # print(contact)
+                contact.execute()
+                send_action_to_crm(action_id, True)
+                # print('action check: ', action_id)
+            except Exception as e:
+                send_action_to_crm(action_id, False, str(e))
+            send_action_to_crm('good ip', True, str(client_ip))
+        else:
+            send_action_to_crm('bad ip', False, str(client_ip))
 
         return render(request, 'home/gcontacts.html', {'success': contact_name})
     else:
