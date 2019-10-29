@@ -170,7 +170,7 @@ def send_action_to_crm(action_id, action_success, err=None):
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
     # https: // hookbin.com
     r = requests.post(url, json=data)
-    # r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
+    r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
 
 
 # def build_people_api_v1(request):
@@ -232,7 +232,7 @@ def add_contact(request):
         client_ip = get_client_ip(request)
         print('client_ip: ', client_ip)
         if client_ip == settings.SAFE_IP:
-            print("safe ip")
+            print("safe ip: ". client_ip)
 
         try:
             data = json.loads(request.body.decode("utf-8"))
@@ -249,29 +249,35 @@ def add_contact(request):
             contact_name = request.POST.get('contact_name')
             phone = request.POST.get('phone')
             email = request.POST.get('email')
-            # {'crmuserid':crmuserid,
-            #  'action_id':action_id,
-            #  'contact_name':contact_name,
-            #  'phone':phone,
-            #  'email':email,
-            # }
-        try:
-            print('create contact function name: ', contact_name)
-            people_api = build_people_from_refresh(crmuserid)
-            # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
-            # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
-            contact = people_api.people().createContact(
-                body={"names": [{"givenName": contact_name, "familyName": ""}],
-                      "emailAddresses": [{"value": email}],
-                      "phoneNumbers": [{"value": phone}]
-                      })
-            print('==============')
-            # print(contact)
-            contact.execute()
-            send_action_to_crm(action_id, True)
-            # print('action check: ', action_id)
-        except Exception as e:
-            send_action_to_crm(action_id, False, str(e))
+
+        # try:
+        print('create contact function name: ', contact_name)
+        people_api = build_people_from_refresh(crmuserid)
+        
+        # contact = people_api.people().updateContact(
+        #     resourceName='people/me',
+        #     body={"names": [{"givenName": contact_name, "familyName": ""}],
+        #           "emailAddresses": [{"value": email}],
+        #           "phoneNumbers": [{"value": phone}]
+        #           },
+        #     updatePersonFields="names,emailAddresses,phoneNumbers"
+        # ).execute()
+        # print('=====update======')
+        # print(contact)
+        # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
+        # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
+        contact = people_api.people().createContact(
+            body={"names": [{"givenName": contact_name, "familyName": ""}],
+                  "emailAddresses": [{"value": email}],
+                  "phoneNumbers": [{"value": phone}]
+                  })
+        print('==============')
+        # print(contact)
+        contact.execute()
+        send_action_to_crm(action_id, True)
+        # print('action check: ', action_id)
+        # except Exception as e:
+        #     send_action_to_crm(action_id, False, str(e))
 
         return render(request, 'home/gcontacts.html', {'success': contact_name})
     else:
