@@ -150,9 +150,13 @@ def google_auth_redirect(request):
 
 def get_client_ip(request):
     ip = request.META.get('REMOTE_ADDR')
-    data = {'REMOTE_ADDR': ip}
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    print('x_forwarded_for: ', x_forwarded_for)
+    data = {'REMOTE_ADDR': ip,
+            'x_forwarded_for': x_forwarded_for}
+    r = requests.post("https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8", json=data)
     r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
-    return ip
+    return x_forwarded_for.split(',')[-1]
 
     # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     # if x_forwarded_for:
