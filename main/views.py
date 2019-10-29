@@ -149,13 +149,18 @@ def google_auth_redirect(request):
 
 
 def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    # HTTP_X_FORWARDED_FOR
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
+    ip = request.META.get('REMOTE_ADDR')
+    data = {'REMOTE_ADDR': ip}
+    r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
     return ip
+
+    # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    # if x_forwarded_for:
+    #     ip = x_forwarded_for.split(',')[0]
+    # else:
+    #     ip = request.META.get('REMOTE_ADDR')
+    #     print(ip)
+    # return ip
 
 
 def send_action_to_crm(action_id, action_success, err=None):
@@ -231,7 +236,7 @@ def add_contact(request):
     if request.method == 'POST':
         client_ip = get_client_ip(request)
         print('client_ip: ', client_ip)
-        if client_ip == settings.SAFE_IP:
+        if client_ip in settings.SAFE_IP:
             print("safe ip: ". client_ip)
 
             try:
@@ -282,7 +287,7 @@ def add_contact(request):
         else:
             send_action_to_crm('bad ip', False, str(client_ip))
 
-        return render(request, 'home/gcontacts.html', {'success': contact_name})
+        return render(request, 'home/gcontacts.html')
     else:
         return render(request, 'home/gcontacts.html')
 
