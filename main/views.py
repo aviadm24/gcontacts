@@ -151,11 +151,11 @@ def google_auth_redirect(request):
 def get_client_ip(request):
     ip = request.META.get('REMOTE_ADDR')
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    print('x_forwarded_for: ', x_forwarded_for)
-    data = {'REMOTE_ADDR': ip,
-            'x_forwarded_for': x_forwarded_for}
+    # print('x_forwarded_for: ', x_forwarded_for)
+    # data = {'REMOTE_ADDR': ip,
+    #         'x_forwarded_for': x_forwarded_for}
     # r = requests.post("https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8", json=data)
-    r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
+    # r = requests.post("https://hookb.in/VGO0EYRayqHX9Lm3gjJG", json=data)
     return x_forwarded_for
 
     # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -168,12 +168,12 @@ def get_client_ip(request):
 
 
 def send_action_to_crm(action_id, action_success, err=None):
-    print('action check2: ', action_id)
+    # print('action check2: ', action_id)
     data = {'action_id': action_id,
             'action_success': action_success,
             'err': err}
     data_json = json.dumps(data)
-    print('data json: ', data_json)
+    # print('data json: ', data_json)
     payload = {'json_payload': data_json}
     url = settings.ACTION_URL
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
@@ -239,56 +239,77 @@ def google_contacts_app(request):
 def add_contact(request):
     if request.method == 'POST':
         client_ip = get_client_ip(request)
-        print('client_ip: ', client_ip)
+        # print('client_ip: ', client_ip)
         if client_ip == None or client_ip in settings.SAFE_IP:
-            print("safe ip: ", client_ip)
+            # print("safe ip: ", client_ip)
 
             try:
                 data = json.loads(request.body.decode("utf-8"))
                 action_id = data['action_id']
-                print('try action check: ', action_id)
+                # print('try action check: ', action_id)
                 crmuserid = data['crmuserid']
                 contact_name = data['contact_name']
                 phone = data['phone']
                 email = data['email']
             except:
                 action_id = request.POST.get('action_id')
-                print('except action check: ', action_id)
+                # print('except action check: ', action_id)
                 crmuserid = request.POST.get('crmuserid')
                 contact_name = request.POST.get('contact_name')
                 phone = request.POST.get('phone')
                 email = request.POST.get('email')
 
             try:
-                print('create contact function name: ', contact_name)
+                # print('create contact function name: ', contact_name)
                 people_api = build_people_from_refresh(crmuserid)
 
                 # aContact = service.people().get(
                 #     resourceName='people/c.....',
                 #     personFields='nicknames'
                 # ).execute()
-
-                # contact = people_api.people().updateContact(
-                #     resourceName='people/me',
-                #     body={"names": [{"givenName": contact_name, "familyName": ""}],
-                #           "emailAddresses": [{"value": email}],
-                #           "phoneNumbers": [{"value": phone}]
-                #           },
-                #     updatePersonFields="names,emailAddresses,phoneNumbers"
-                # ).execute()
-                # print('=====update======')
-                # print(contact)
-                # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
-                # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
-                contact = people_api.people().createContact(
-                    body={"names": [{"givenName": contact_name, "familyName": ""}],
-                          "emailAddresses": [{"value": email}],
-                          "phoneNumbers": [{"value": phone}]
-                          })
-                print('==============')
-                # print(contact)
-                resourceName = contact.execute()
-                print('resourceName: ', resourceName)
+                try:
+                    user = User_tokens.objects.get(crmuserid=crmuserid)
+                    resourceName = user.state_key
+                    etag = user.email
+                    contact = people_api.people().updateContact(
+                        resourceName=resourceName,
+                        body={
+                              "etag": etag,
+                              "names": [{"givenName": contact_name, "familyName": ""}],
+                              "emailAddresses": [{"value": email}],
+                              "phoneNumbers": [{"value": phone}]
+                              },
+                        updatePersonFields="names,emailAddresses,phoneNumbers"
+                    )
+                    dict_resourceName = contact.execute()
+                    print('dict_resourceName: ', dict_resourceName)
+                    resourceName = dict_resourceName['resourceName']
+                    etag = dict_resourceName['etag']
+                    user.state_key = resourceName
+                    user.email = etag
+                    user.save()
+                    print('=====update======')
+                    # print(contact)
+                except Exception as e:
+                    print('exeption: ', e)
+                    # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
+                    # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
+                    contact = people_api.people().createContact(
+                        body={"names": [{"givenName": contact_name, "familyName": ""}],
+                              "emailAddresses": [{"value": email}],
+                              "phoneNumbers": [{"value": phone}]
+                              })
+                    print('=====new======')
+                    # print(contact)
+                    dict_resourceName = contact.execute()
+                    resourceName = dict_resourceName['resourceName']
+                    etag = dict_resourceName['etag']
+                    user = User_tokens.objects.get(crmuserid=crmuserid)
+                    user.state_key = resourceName
+                    user.email = etag
+                    user.save()
+                    # print('dict_resourceName: ', dict_resourceName)
+                    print('etag: ', dict_resourceName['etag'])
                 send_action_to_crm(action_id, True)
                 # print('action check: ', action_id)
             except Exception as e:
@@ -320,7 +341,7 @@ def send_mail(request):
 
 @csrf_exempt
 def action_check(request):
-    print(request)
+    # print(request)
     if request.method == 'POST':
         # print(json.loads(request.body))
 
@@ -328,5 +349,5 @@ def action_check(request):
         # action_success = request.POST.get('action_success')
         err = request.POST.get('err')
         # print('action: {} - success: {}'.format(action['action_id'], action['action_success']))
-        print('action: ', action)
+        # print('action: ', action)
     return render(request, 'home/privacy_policy.html')
