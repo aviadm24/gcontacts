@@ -10,6 +10,7 @@ from .models import User_tokens, User_resourceNames
 from django.contrib.sessions.backends.db import SessionStore
 import json
 import requests
+import traceback
 # about ssl in django
 # https://stackoverflow.com/questions/7610394/how-to-setup-ssl-on-a-local-django-server-to-test-a-facebook-app
 
@@ -378,6 +379,7 @@ def add_contact(request):
                 user_resource_name.save()
                 send_action_to_crm(action_id, True)
             except Exception as e:
+                traceback.print_exc()
                 send_action_to_crm(action_id, False, str(e))
             # send_action_to_crm('good ip', True, str(client_ip))
         else:
