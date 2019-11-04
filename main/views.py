@@ -345,11 +345,13 @@ def add_contact(request):
                                 updatePersonFields="names"
                             )
                             dict_resourceName = contact.execute()
-                            user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name)
-                            user_resource_name.user = user
+                            user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
+                                                                                                   user=user,
+                                                                                                   etag=etag)
+                            # user_resource_name.user = user
                             # user_resource_name.resource_name = res_name
-                            user_resource_name.etag = etag
-                            user_resource_name.save()
+                            # user_resource_name.etag = etag
+                            # user_resource_name.save()
                             print('=====update======')
                             print('dict_resourceName: ', dict_resourceName)
                             send_action_to_crm(action_id, True)
