@@ -357,7 +357,7 @@ def add_contact(request):
                             dict_resourceName = contact.execute()
                             user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
                                                                                                    user=user,
-                                                                                                   etag=etag)
+                                                                                                   defaults={'etag': etag})
                             # user_resource_name.user = user
                             # user_resource_name.resource_name = res_name
                             # user_resource_name.etag = etag
