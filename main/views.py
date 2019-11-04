@@ -236,6 +236,15 @@ def google_contacts_app(request):
     return render(request, template_name='home/gcontacts.html')
 
 
+def check_equal_phone(posted_phone, saved_phone):
+    posted_phone = ''.join(filter(str.isdigit, posted_phone))
+    saved_phone = ''.join(filter(str.isdigit, saved_phone))
+    if posted_phone == saved_phone:
+        return True
+    else:
+        return False
+
+
 @csrf_exempt
 def add_contact(request):
     if request.method == 'POST':
@@ -335,7 +344,8 @@ def add_contact(request):
                     try:
                         c_phone = d['phoneNumbers'][0]['value']
                         phone_list.append(c_phone)
-                        if phone == c_phone:
+                        # if phone == c_phone:
+                        if check_equal_phone(phone, c_phone):
                             contact = people_api.people().updateContact(
                                 resourceName=res_name,
                                 body={
@@ -353,7 +363,7 @@ def add_contact(request):
                             # user_resource_name.etag = etag
                             # user_resource_name.save()
                             print('=====update======')
-                            print('dict_resourceName: ', dict_resourceName)
+                            # print('dict_resourceName: ', dict_resourceName)
                             send_action_to_crm(action_id, True)
                             return render(request, 'home/gcontacts.html')
 
