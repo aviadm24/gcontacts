@@ -143,7 +143,7 @@ STATICFILES_DIRS = (
 # very important for aws! - https://stackoverflow.com/questions/42462880/how-to-serve-static-files-to-aws-when-deploying-django-app-python-manage-py-co
 #STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
