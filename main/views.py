@@ -336,14 +336,14 @@ def add_contact(request):
                 # total = connections['totalItems']
                 # if total<100:
                 #     total =100
-                phone_list = []
-                # for _ in range(total//100):
+                print("conn: ", connections['connections'])
+                print("keys conn: ", connections.keys())
                 for d in connections['connections']:
                     etag = d['etag']
                     res_name = d['resourceName']
                     try:
                         c_phone = d['phoneNumbers'][0]['value']
-                        phone_list.append(c_phone)
+                        # phone_list.append(c_phone)
                         # if phone == c_phone:
                         if check_equal_phone(phone, c_phone):
                             contact = people_api.people().updateContact(
