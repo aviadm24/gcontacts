@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
@@ -180,7 +181,7 @@ def send_action_to_crm(action_id, action_success, err=None):
     # https: // stackoverflow.com / questions / 8634473 / sending - json - request -with-python
     # https: // hookbin.com
     r = requests.post(url, json=data)
-    r = requests.post("https://hookb.in/kxPe0mM6jdCma6pwz7qZ", json=data)
+    # r = requests.post("https://hookb.in/kxPe0mM6jdCma6pwz7qZ", json=data)
 
 
 # def build_people_api_v1(request):
@@ -308,7 +309,8 @@ def add_contact(request):
             # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
             # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
             try:
-                user = User_tokens.objects.get(crmuserid=crmuserid)
+                # user = User_tokens.objects.get_object_or_404(crmuserid=crmuserid)
+                user = get_object_or_404(User_tokens, crmuserid=crmuserid)
                 # try:
                 #     resourceNames = User_resourceNames.objects.filter(user=user).values_list('resource_name', flat=True)
                 #     update_contact = people_api.people().getBatchGet(
@@ -354,9 +356,9 @@ def add_contact(request):
                                     updatePersonFields="names"
                                 )
                                 dict_resourceName = contact.execute()
-                                user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
-                                                                                                       user=user,
-                                                                                                       defaults={'etag': etag})
+                                # user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
+                                #                                                                        user=user,
+                                #                                                                        defaults={'etag': etag})
                                 # user_resource_name.user = user
                                 # user_resource_name.resource_name = res_name
                                 # user_resource_name.etag = etag
@@ -368,6 +370,9 @@ def add_contact(request):
 
                         except KeyError:
                             pass
+                        except Exception:
+                            trace = traceback.print_exc()
+                            send_action_to_crm(action_id, False, str(trace))
 
                 # print('len:', len(connections['connections']))
                 # print('len:', len(phone_list))

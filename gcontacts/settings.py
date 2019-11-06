@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'danielavida.herokuapp.com', 'www.pythoninhebrew.com', 'h.lavida.co.il']
 
