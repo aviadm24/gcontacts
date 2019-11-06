@@ -336,7 +336,7 @@ def add_contact(request):
                 # total = connections['totalItems']
                 # if total<100:
                 #     total =100
-                print("conn: ", connections['connections'])
+                print("conn: ", connections)
                 print("keys conn: ", connections.keys())
                 for d in connections['connections']:
                     etag = d['etag']
