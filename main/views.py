@@ -336,45 +336,41 @@ def add_contact(request):
                 # total = connections['totalItems']
                 # if total<100:
                 #     total =100
-                print("conn: ", connections)
-                print("keys conn: ", connections.keys())
-                for d in connections['connections']:
-                    etag = d['etag']
-                    res_name = d['resourceName']
-                    try:
-                        c_phone = d['phoneNumbers'][0]['value']
-                        # phone_list.append(c_phone)
-                        # if phone == c_phone:
-                        if check_equal_phone(phone, c_phone):
-                            contact = people_api.people().updateContact(
-                                resourceName=res_name,
-                                body={
-                                    "etag": etag,
-                                    "names": [{"givenName": contact_name, "familyName": ""}],
-                                },
-                                updatePersonFields="names"
-                            )
-                            dict_resourceName = contact.execute()
-                            user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
-                                                                                                   user=user,
-                                                                                                   defaults={'etag': etag})
-                            # user_resource_name.user = user
-                            # user_resource_name.resource_name = res_name
-                            # user_resource_name.etag = etag
-                            # user_resource_name.save()
-                            print('=====update======')
-                            # print('dict_resourceName: ', dict_resourceName)
-                            send_action_to_crm(action_id, True)
-                            return render(request, 'home/gcontacts.html')
+                print("conn: ", connections.keys())
+                if "connections" in connections.keys():
+                    for d in connections['connections']:
+                        etag = d['etag']
+                        res_name = d['resourceName']
+                        try:
+                            c_phone = d['phoneNumbers'][0]['value']
+                            if check_equal_phone(phone, c_phone):
+                                print("found equal phone numbers: {} - {}".format(phone, c_phone))
+                                contact = people_api.people().updateContact(
+                                    resourceName=res_name,
+                                    body={
+                                        "etag": etag,
+                                        "names": [{"givenName": contact_name, "familyName": ""}],
+                                    },
+                                    updatePersonFields="names"
+                                )
+                                dict_resourceName = contact.execute()
+                                user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
+                                                                                                       user=user,
+                                                                                                       defaults={'etag': etag})
+                                # user_resource_name.user = user
+                                # user_resource_name.resource_name = res_name
+                                # user_resource_name.etag = etag
+                                # user_resource_name.save()
+                                print('=====update======')
+                                # print('dict_resourceName: ', dict_resourceName)
+                                send_action_to_crm(action_id, True)
+                                return render(request, 'home/gcontacts.html')
 
-                    except KeyError:
-                        pass
+                        except KeyError:
+                            pass
 
                 # print('len:', len(connections['connections']))
                 # print('len:', len(phone_list))
-
-
-
                 contact = people_api.people().createContact(
                     body={"names": [{"givenName": contact_name, "familyName": ""}],
                           "phoneNumbers": [{"value": phone}]
@@ -391,8 +387,8 @@ def add_contact(request):
                 user_resource_name.save()
                 send_action_to_crm(action_id, True)
             except Exception as e:
-                traceback.print_exc()
-                send_action_to_crm(action_id, False, str(e))
+                trace = traceback.print_exc()
+                send_action_to_crm(action_id, False, str(trace))
             # send_action_to_crm('good ip', True, str(client_ip))
         else:
             return render(request, 'home/privacy_policy.html')
