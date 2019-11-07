@@ -191,7 +191,8 @@ def send_action_to_crm(action_id, action_success, err=None):
 
 
 def build_people_from_refresh(crmuserid):
-    user = User_tokens.objects.get(crmuserid=crmuserid)
+    # user = User_tokens.objects.get(crmuserid=crmuserid)
+    user = get_object_or_404(User_tokens, crmuserid=crmuserid)
     refresh_token = user.refresh_token
     credentials = build_credentials_from_refresh(refresh_token)
     return googleapiclient.discovery.build('people', 'v1', credentials=credentials)
@@ -250,7 +251,7 @@ def check_equal_phone(posted_phone, saved_phone):
 def add_contact(request):
     if request.method == 'POST':
         client_ip = get_client_ip(request)
-        # print('client_ip: ', client_ip)
+        print('client_ip: ', client_ip)
         if client_ip == None or client_ip in settings.SAFE_IP:
             # print("safe ip: ", client_ip)
 
@@ -270,45 +271,45 @@ def add_contact(request):
                 phone = request.POST.get('phone')
                 # email = request.POST.get('email')
 
-            # try:
-            print('crmuserid: ', crmuserid)
-            people_api = build_people_from_refresh(crmuserid)
-
-
-
-            #     user = User_tokens.objects.get(crmuserid=crmuserid)
-            #     resourceName = user.state_key
-            #     etag = user.email
-            #     aContact = people_api.people().get(
-            #         resourceName=resourceName,
-            #         personFields='phoneNumbers'
-            #     ).execute()
-            #     print('aContact: ', aContact)
-            #     if phone in aContact:
-            #         contact = people_api.people().updateContact(
-            #             resourceName=resourceName,
-            #             body={
-            #                   "etag": etag,
-            #                   "names": [{"givenName": contact_name, "familyName": ""}],
-            #                   "emailAddresses": [{"value": email}],
-            #                   "phoneNumbers": [{"value": phone}]
-            #                   },
-            #             updatePersonFields="names,emailAddresses,phoneNumbers"
-            #         )
-            #         dict_resourceName = contact.execute()
-            #         print('dict_resourceName: ', dict_resourceName)
-            #         resourceName = dict_resourceName['resourceName']
-            #         etag = dict_resourceName['etag']
-            #         user.state_key = resourceName
-            #         user.email = etag
-            #         user.save()
-            #         print('=====update======')
-            #         # print(contact)
-            # except Exception as e:
-            #     print('exeption: ', e)
-            # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
-            # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
             try:
+                print('crmuserid: ', crmuserid)
+                people_api = build_people_from_refresh(crmuserid)
+
+
+
+                #     user = User_tokens.objects.get(crmuserid=crmuserid)
+                #     resourceName = user.state_key
+                #     etag = user.email
+                #     aContact = people_api.people().get(
+                #         resourceName=resourceName,
+                #         personFields='phoneNumbers'
+                #     ).execute()
+                #     print('aContact: ', aContact)
+                #     if phone in aContact:
+                #         contact = people_api.people().updateContact(
+                #             resourceName=resourceName,
+                #             body={
+                #                   "etag": etag,
+                #                   "names": [{"givenName": contact_name, "familyName": ""}],
+                #                   "emailAddresses": [{"value": email}],
+                #                   "phoneNumbers": [{"value": phone}]
+                #                   },
+                #             updatePersonFields="names,emailAddresses,phoneNumbers"
+                #         )
+                #         dict_resourceName = contact.execute()
+                #         print('dict_resourceName: ', dict_resourceName)
+                #         resourceName = dict_resourceName['resourceName']
+                #         etag = dict_resourceName['etag']
+                #         user.state_key = resourceName
+                #         user.email = etag
+                #         user.save()
+                #         print('=====update======')
+                #         # print(contact)
+                # except Exception as e:
+                #     print('exeption: ', e)
+                # https: // stackoverflow.com / questions / 46948326 / creating - new - contact - google - people - api
+                # http: // www.fujiax.com / stackoverflow_ / questions / 57538504 / google - people - api - in -python - gives - error - invalid - json - payload - received - unknown
+                # try:
                 # user = User_tokens.objects.get_object_or_404(crmuserid=crmuserid)
                 user = get_object_or_404(User_tokens, crmuserid=crmuserid)
                 # try:
@@ -392,7 +393,7 @@ def add_contact(request):
                 user_resource_name.save()
                 send_action_to_crm(action_id, True)
             except Exception as e:
-                trace = traceback.print_exc()
+                trace = traceback.format_exc()
                 send_action_to_crm(action_id, False, str(trace))
             # send_action_to_crm('good ip', True, str(client_ip))
         else:

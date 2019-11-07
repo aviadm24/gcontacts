@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
 
 # ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'danielavida.herokuapp.com', 'www.pythoninhebrew.com', 'h.lavida.co.il']
 ALLOWED_HOSTS = ['*']
@@ -143,9 +143,9 @@ STATICFILES_DIRS = (
 # very important for aws! - https://stackoverflow.com/questions/42462880/how-to-serve-static-files-to-aws-when-deploying-django-app-python-manage-py-co
 #STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# for production
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+
+# https://stackoverflow.com/questions/51466192/server-error-500-django-deployment-on-heroku
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -196,6 +196,7 @@ EMAIL_HOST_PASSWORD = 'aviadpython'
 ipaddress = socket.gethostbyname(socket.gethostname())
 # print('ip_address:', ipaddress)
 if not ipaddress.startswith('172'):
+    DEBUG = True
     FN_AUTH_REDIRECT_URI = "http://localhost:8000/google/auth"
     FN_BASE_URI = "http://localhost:8000"
     FN_CLIENT_ID = "37866652038-qh3b1ni3e1b5ad8n3beds83s7e1jt1fj.apps.googleusercontent.com"
@@ -204,7 +205,10 @@ if not ipaddress.startswith('172'):
     ACTION_URL = "http://localhost:8000/action_check"
     # ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
     SAFE_IP = '127.0.0.1'
+    # only for dev not for production!
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
+    DEBUG = False
     FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
     FN_BASE_URI = "https://www.pythoninhebrew.com"
     FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
