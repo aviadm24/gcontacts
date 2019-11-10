@@ -20,6 +20,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.google_contacts_app, name='google_contacts_app'),
+    url(r'^home$', views.google_contacts_app, name='home'),
     url(r'^google/login$', views.login, name='login'),
     url(r'^google/auth$', views.google_auth_redirect, name='google_auth_redirect'),
     url(r'^google_contacts_app$', views.google_contacts_app, name='google_contacts_app'),
