@@ -241,7 +241,7 @@ def google_contacts_app(request):
 def check_equal_phone(posted_phone, saved_phone):
     posted_phone = ''.join(filter(str.isdigit, posted_phone))
     saved_phone = ''.join(filter(str.isdigit, saved_phone))
-    if posted_phone == saved_phone:
+    if posted_phone == saved_phone or list(saved_phone)[1:] == list(posted_phone)[3:]:
         return True
     else:
         return False
@@ -383,14 +383,14 @@ def add_contact(request):
                           })
                 print('=====new======')
                 dict_resourceName = contact.execute()
-                resourceName = dict_resourceName['resourceName']
-                etag = dict_resourceName['etag']
+                # resourceName = dict_resourceName['resourceName']
+                # etag = dict_resourceName['etag']
 
-                user_resource_name = User_resourceNames()
-                user_resource_name.user = user
-                user_resource_name.resource_name = resourceName
-                user_resource_name.etag = etag
-                user_resource_name.save()
+                # user_resource_name = User_resourceNames()
+                # user_resource_name.user = user
+                # user_resource_name.resource_name = resourceName
+                # user_resource_name.etag = etag
+                # user_resource_name.save()
                 send_action_to_crm(action_id, True)
             except Exception as e:
                 trace = traceback.format_exc()
