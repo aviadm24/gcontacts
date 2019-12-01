@@ -357,6 +357,7 @@ def add_contact(request):
                                     updatePersonFields="names"
                                 )
                                 dict_resourceName = contact.execute()
+                                print('object from google: ', dict_resourceName)
                                 # user_resource_name, created = User_resourceNames.objects.get_or_create(resource_name=res_name,
                                 #                                                                        user=user,
                                 #                                                                        defaults={'etag': etag})
@@ -365,8 +366,13 @@ def add_contact(request):
                                 # user_resource_name.etag = etag
                                 # user_resource_name.save()
                                 print('=====update======')
-                                # print('dict_resourceName: ', dict_resourceName)
-                                send_action_to_crm(action_id, True)
+                                phone_num = dict_resourceName['phoneNumbers'][0]['value']
+                                if phone_num:
+                                    send_action_to_crm(action_id, True)
+                                    print('success got object back')
+                                else:
+                                    send_action_to_crm(action_id, False, 'didnt get people object back from google')
+                                    print('didnt get object back')
                                 return render(request, 'home/gcontacts.html')
 
                         except KeyError:
@@ -383,6 +389,8 @@ def add_contact(request):
                           })
                 print('=====new======')
                 dict_resourceName = contact.execute()
+
+                phone_num = dict_resourceName['phoneNumbers'][0]['value']
                 # resourceName = dict_resourceName['resourceName']
                 # etag = dict_resourceName['etag']
 
@@ -391,7 +399,12 @@ def add_contact(request):
                 # user_resource_name.resource_name = resourceName
                 # user_resource_name.etag = etag
                 # user_resource_name.save()
-                send_action_to_crm(action_id, True)
+                if phone_num:
+                    send_action_to_crm(action_id, True)
+                    print('success got object back')
+                else:
+                    send_action_to_crm(action_id, False, 'didnt get people object back from google')
+                    print('didnt get object back')
             except Exception as e:
                 trace = traceback.format_exc()
                 send_action_to_crm(action_id, False, str(trace))
