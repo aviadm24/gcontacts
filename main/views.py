@@ -169,10 +169,11 @@ def get_client_ip(request):
     # return ip
 
 
-def send_action_to_crm(action_id, action_success, err=None):
+def send_action_to_crm(action_id, action_success, response=None, err=None):
     # print('action check2: ', action_id)
     data = {'action_id': action_id,
             'action_success': action_success,
+            'response': response,
             'err': err}
     data_json = json.dumps(data)
     # print('data json: ', data_json)
@@ -366,13 +367,14 @@ def add_contact(request):
                                 # user_resource_name.etag = etag
                                 # user_resource_name.save()
                                 print('=====update======')
-                                phone_num = dict_resourceName['phoneNumbers'][0]['value']
-                                if phone_num:
-                                    send_action_to_crm(action_id, True)
-                                    print('success got object back')
-                                else:
-                                    send_action_to_crm(action_id, False, 'didnt get people object back from google')
-                                    print('didnt get object back')
+                                send_action_to_crm(action_id, True, dict_resourceName)
+                                # phone_num = dict_resourceName['phoneNumbers'][0]['value']
+                                # if phone_num:
+                                #     send_action_to_crm(action_id, True)
+                                #     print('success got object back')
+                                # else:
+                                #     send_action_to_crm(action_id, False, 'didnt get people object back from google')
+                                #     print('didnt get object back')
                                 return render(request, 'home/gcontacts.html')
 
                         except KeyError:
@@ -390,7 +392,7 @@ def add_contact(request):
                 print('=====new======')
                 dict_resourceName = contact.execute()
 
-                phone_num = dict_resourceName['phoneNumbers'][0]['value']
+                # phone_num = dict_resourceName['phoneNumbers'][0]['value']
                 # resourceName = dict_resourceName['resourceName']
                 # etag = dict_resourceName['etag']
 
@@ -399,12 +401,13 @@ def add_contact(request):
                 # user_resource_name.resource_name = resourceName
                 # user_resource_name.etag = etag
                 # user_resource_name.save()
-                if phone_num:
-                    send_action_to_crm(action_id, True)
-                    print('success got object back')
-                else:
-                    send_action_to_crm(action_id, False, 'didnt get people object back from google')
-                    print('didnt get object back')
+                send_action_to_crm(action_id, True, dict_resourceName)
+                # if phone_num:
+                #     send_action_to_crm(action_id, True)
+                #     print('success got object back')
+                # else:
+                #     send_action_to_crm(action_id, False, 'didnt get people object back from google')
+                #     print('didnt get object back')
             except Exception as e:
                 trace = traceback.format_exc()
                 send_action_to_crm(action_id, False, str(trace))
