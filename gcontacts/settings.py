@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_lkurf#cy@r^+lso44bf!-((_oau!mx@=)ri*q3tgo38y2%04%'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
@@ -212,7 +212,7 @@ else:
     FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
     FN_BASE_URI = "https://www.pythoninhebrew.com"
     FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
-    FN_CLIENT_SECRET = "8wKO2wWzfQ-j_wq0csr3_BdB"
+    FN_CLIENT_SECRET = os.environ["FN_CLIENT_SECRET"]
     AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
     # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
     ACTION_URL = 'https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
