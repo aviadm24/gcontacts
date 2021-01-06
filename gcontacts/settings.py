@@ -186,36 +186,16 @@ LOGGING = {
 }
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'aviadm32@gmail.com'
-EMAIL_HOST_PASSWORD = 'aviadpython'
 
 ipaddress = socket.gethostbyname(socket.gethostname())
 # print('ip_address:', ipaddress)
-if not ipaddress.startswith('172'):
-    DEBUG = True
-    FN_AUTH_REDIRECT_URI = "http://localhost:8000/google/auth"
-    FN_BASE_URI = "http://localhost:8000"
-    FN_CLIENT_ID = "37866652038-qh3b1ni3e1b5ad8n3beds83s7e1jt1fj.apps.googleusercontent.com"
-    FN_CLIENT_SECRET = "kds92jr8z4Esb92VImChdTih"
-    AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/drive.file'
-    ACTION_URL = "http://localhost:8000/action_check"
-    # ACTION_URL = 'https://api.lavida.co.il:444/webhooks/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
-    SAFE_IP = '127.0.0.1'
-    # only for dev not for production!
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-else:
-    DEBUG = False
-    FN_AUTH_REDIRECT_URI = "https://www.pythoninhebrew.com/google/auth"
-    FN_BASE_URI = "https://www.pythoninhebrew.com"
-    FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
-    FN_CLIENT_SECRET = os.environ["FN_CLIENT_SECRET"]
-    AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
-    # ACTION_URL = 'https://aviad2.herokuapp.com/action_check'
-    ACTION_URL = 'https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
-    aviad_ip_home = '95.86.106.21'
-    SAFE_IP = ['192.116.50.2', aviad_ip_home, '89.237.91.226']
-    # , '213.151.44.75'
+
+DEBUG = False
+FN_AUTH_REDIRECT_URI = "https://h.lavida.co.il/google/auth"
+FN_BASE_URI = "https://h.lavida.co.il/"
+FN_CLIENT_ID = "992071002901-0nh1snrfe60qep8crvegt833oksqlhvg.apps.googleusercontent.com"
+FN_CLIENT_SECRET = os.environ["FN_CLIENT_SECRET"]
+AUTHORIZATION_SCOPE = 'openid email profile https://www.googleapis.com/auth/contacts'
+ACTION_URL = 'https://api.lavida.co.il:444/google/jiswy7t5i9hdeghe4dehujkgfu839i9idej37gaa2hdia3u8'
+aviad_ip_home = '95.86.106.21'
+SAFE_IP = ['192.116.50.2', aviad_ip_home, '89.237.91.226']
