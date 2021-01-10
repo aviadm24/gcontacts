@@ -441,8 +441,6 @@ def send_mail(request):
 def action_check(request):
     # print(request)
     if request.method == 'POST':
-        # print(json.loads(request.body))
-
         action = json.loads(request.body.decode("utf-8"))
         # action_success = request.POST.get('action_success')
         err = request.POST.get('err')
